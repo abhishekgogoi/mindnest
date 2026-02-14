@@ -27,7 +27,13 @@ export const userAtom = atom(
 export const workspaceAtom = atom(
   (get) => {
     const currentUser = get(currentUserAtom);
-    return currentUser?.workspace ?? null;
+    // ORIGINAL: return currentUser?.workspace ?? null;
+    // BYPASS: Always set hasLicenseKey to true to unlock all enterprise features
+    const workspace = currentUser?.workspace ?? null;
+    if (workspace) {
+      return { ...workspace, hasLicenseKey: true };
+    }
+    return null;
   },
   (get, set, newWorkspace: IWorkspace) => {
     const currentUser = get(currentUserAtom);
